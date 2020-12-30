@@ -1,49 +1,28 @@
 {
   // Editor 설정
-  "window.zoomLevel": 1.2,
-  "editor.fontSize": 16,
-  "editor.insertSpaces": false,
+  "editor.insertSpaces": true,
   "editor.detectIndentation": false,
   "explorer.compactFolders": false,
   "editor.suggest.localityBonus": true,
   "editor.suggestSelection": "first",
-  "editor.quickSuggestions": {
-    "other": true,
-    "comments": false,
-    "strings": false
-  },
+  // "editor.quickSuggestions": {
+  //   "other": true,
+  //   "comments": false,
+  //   "strings": false
+  // },
   "editor.renderWhitespace": "all",
   "editor.tabSize": 2,
   "editor.renderIndentGuides": false,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
-  "javascript.format.enable": false,
   "[javascript]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": false
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "editor.fontFamily": "'SeoulNamsanM'",
-  // eslint 설정
-	"eslint.alwaysShowStatus": true,
-	"eslint.options": {
-    "extensions": [".html", ".ts", ".js", ".tsx"]
-	},
-	"eslint.validate": [
-    "javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact"
-  ],
-  // tslint config 파일 path
-  // "tslint.configFile": "tslint.json",
-  // typescript 설정
-  "typescript.locale": "ko",
-  "typescript.format.enable": false,
-  "typescript.suggest.autoImports": true,
-  "tsimporter.tsconfigName": "tsconfig.json",
-  "tsimporter.filesToScan": ["**/*.ts"],
+  // "editor.fontFamily": "'SeoulNamsanM'",
+
   // perttier 설정
   "prettier.jsxSingleQuote": true,
   "prettier.tabWidth": 2,
@@ -54,6 +33,7 @@
   "prettier.trailingComma": "none",
   "prettier.semi": true,
   "prettier.arrowParens": "avoid",
+
   // folder exclude
   "search.exclude": {
     ".git": true,
@@ -64,12 +44,15 @@
     "lib": true,
     "node_modules": true
   },
+
   // files 설정
   "files.autoSave": "onFocusChange",
   "files.defaultLanguage": "ko",
+
   // 테마 설정
   "workbench.iconTheme": "material-icon-theme",
   "workbench.colorTheme": "Cobalt2",
+
   // 터미널 설정
   "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
   "terminal.integrated.cursorBlinking": true,
@@ -77,6 +60,7 @@
   "terminal.integrated.shellArgs.windows": ["/K", "chcp 65001"],
   "terminal.integrated.fontFamily": "Lucida console, Consolas, 'Courier New', monospace, 'Segoe UI emoji', 'Segoe UI Symbol'",
   "terminal.integrated.fontSize": 14,
+
   // importCost 설정
   "importCost.debug": true,
   "importCost.timeout": 100000,
@@ -88,10 +72,5 @@
   "importCost.typescriptExtensions": ["\\.tsx?$"],
   "importCost.javascriptExtensions": ["\\.jsx?$"],
   "importCost.bundleSizeDecoration": "both",
-  "importCost.showCalculatingDecoration": true,
-  // 기타 설정
-  "git.autofetch": true,
-  "liveServer.settings.donotShowInfoMsg": true,
-  "liveServer.settings.donotVerifyTags": true,
-  "javascript.updateImportsOnFileMove.enabled": "always"
+  "importCost.showCalculatingDecoration": true
 }
