@@ -16,3 +16,40 @@
   - 관련 url
     - <https://docs.nestjs.com/graphql/quick-start>
   - yarn add @nestjs/graphql graphql-tools graphql apollo-server-express
+
+## nest cli 명령
+
+- 모듈 생성
+  - nest g mo restaurants
+
+## args 의 validate 체크
+
+- 관련 라이브러리 설치 및 설정
+  - yarn add class-validator class-transformer
+  - main.ts 에 useGlobalPipes() 추가 (아래 코드 참고)
+
+  ```js
+    const app = await NestFactory.create(AppModule);
+
+    // class-validator 사용을 위한 설정
+    app.useGlobalPipes(new ValidationPipe());
+
+    await app.listen(3000);
+  ```
+
+- 사용
+  - class-validator 를 사용하여 args dto Field 부분에 적용 (아래 코드 참고)
+
+  ```js
+  @ArgsType()
+  export class CreateRestaurantDto {
+    @Field(() => String)
+    @IsString()
+    @Length(5, 10)
+    name: string;
+
+    @Field(() => Boolean)
+    @IsBoolean()
+    isVegan: boolean;
+  }
+  ```
