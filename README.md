@@ -13,4 +13,6 @@
     - nest g application
 
 - graphql 관련 인스톨
+  - 관련 url
+    - <https://docs.nestjs.com/graphql/quick-start>
   - yarn add @nestjs/graphql graphql-tools graphql apollo-server-express
