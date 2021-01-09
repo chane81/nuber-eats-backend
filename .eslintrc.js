@@ -1,7 +1,12 @@
 module.exports = {
+  /**
+   * 아래 warning 에 대한 대응으로 ignorePatterns 옵션 추가
+   * Parsing error: "parserOptions.project" has been set for @typescript-eslint/parser
+   */
+  ignorePatterns: ['.eslintrc.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: './tsconfig.json',
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
@@ -20,13 +25,13 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    
+
     // Delete `␍`eslintprettier/prettier 대응
-    "prettier/prettier": [
-      "error",
+    'prettier/prettier': [
+      'error',
       {
-        "endOfLine": "auto"
-      }
-    ]
+        endOfLine: 'auto',
+      },
+    ],
   },
 };
