@@ -134,13 +134,13 @@
   - 관련 URL
     - <https://docs.nestjs.com/openapi/mapped-types>
   - mapped-type 종류
-    - 1. Partial
-      - 모든 필드가 Optional
-    - 2. Pick
-      - 특정 필드만 사용할 때
-    - 3. Omit
-      - 특정 필드만 제거
-    - 4. Intersection
-      - 여러 엔티티의 필드를 합침
-    - 5. Composition
-      - mapped-type 를 여러개 사용
+    1. Partial
+       - 모든 필드가 Optional
+    2. Pick
+       - 특정 필드만 사용할 때
+    3. Omit
+       - 특정 필드만 제거
+    4. Intersection
+       - 여러 엔티티의 필드를 합침
+    5. Composition
+       - mapped-type 를 여러개 사용
