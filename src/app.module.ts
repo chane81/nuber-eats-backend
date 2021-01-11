@@ -31,6 +31,10 @@ import { User } from './users/entities/user.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
+      // Heroku Postgres DB 연결시
+      // ssl: {
+      //   rejectUnauthorized: true,
+      // },
       entities: [User],
     }),
     // graphql set
