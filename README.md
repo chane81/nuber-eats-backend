@@ -23,6 +23,10 @@
 - env config 관련 인스톨
   - yarn add @nestjs/config cross-env
 
+- jwt 관련 인스톨
+  - yarn add jsonwebtoken
+  - yarn add -D @types/jsonwebtoken
+
 ## nest cli 명령
 
 - 모듈 생성
@@ -127,7 +131,7 @@
   - Graphql 호출을 위한 Resolver Query, Mutation 이 담긴다.
   - Service 를 불러와서 해당 값을 리턴한다.
 
-## DTO & Entity 
+## DTO & Entity
 
 - DTO
   - DTO 생성시 nest.js 에서는 mapped-type 라는것을 제공한다

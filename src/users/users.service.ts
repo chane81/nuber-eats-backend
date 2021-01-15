@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { CreateAccountInput } from './dtos/create-account.dto';
 import { LoginInput } from './dtos/login.dto';
+import { JwtService } from '../jwt/jwt.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly users: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async createAccount({
@@ -59,9 +61,11 @@ export class UsersService {
         };
       }
 
+      const token = this.jwtService.sign(user.id);
+
       return {
         ok: true,
-        token: 'mytoken',
+        token,
       };
     } catch (error) {
       return {

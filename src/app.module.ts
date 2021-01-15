@@ -5,13 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { JwtModule } from './jwt/jwt.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
     // process env set
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.dev.env' : '.test.env',
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod'),
         DB_HOST: Joi.string().required(),
@@ -19,6 +21,7 @@ import { User } from './users/entities/user.entity';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        PRIATE_KEY: Joi.string().required(),
       }),
     }),
     // type orm set
@@ -43,7 +46,11 @@ import { User } from './users/entities/user.entity';
       // autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql')
       autoSchemaFile: true,
     }),
+    JwtModule.forRoot({
+      privateKey: process.env.PRIATE_KEY,
+    }),
     UsersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
