@@ -10,5 +10,8 @@ import { UsersService } from './users.service';
 
   /** provider resolver, service */
   providers: [UsersResolver, UsersService],
+
+  /** export service */
+  exports: [UsersService],
 })
 export class UsersModule {}
