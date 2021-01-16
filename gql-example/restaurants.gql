@@ -1,0 +1,27 @@
+query {
+  restaurants {
+    id
+    name
+   	isVegan
+    address
+  }
+}
+
+mutation {
+  createRestaurant(input: {
+    name: "myname",
+    isVegan: true,
+    address: "seoul"    
+  })
+}
+
+mutation {
+  updateRestaurant(input: {
+    id: 8
+    data: {
+      name: "tt99",
+      isVegan: false,
+      address: "kangnam"
+    }
+  })
+}

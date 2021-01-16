@@ -1,0 +1,21 @@
+mutation {
+  createAccount (input: {
+    email: "chane.com",
+    password: "12345",
+    role: Client
+  }) {
+    error
+    ok
+  }
+}
+
+mutation {
+  login(input: {
+    email: "test@naver.com",
+    password: "12345"
+  }) {
+    error
+    ok
+    token
+  }
+}
