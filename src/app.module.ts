@@ -13,6 +13,8 @@ import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { CommonModule } from './common/common.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { RestaurantsModule } from './restaurants/restaurants.module';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
 
 @Module({
   imports: [
@@ -44,7 +46,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       // ssl: {
       //   rejectUnauthorized: true,
       // },
-      entities: [User],
+      entities: [User, Restaurant],
     }),
     // graphql set
     GraphQLModule.forRoot({
@@ -55,6 +57,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     JwtModule.forRoot({
       privateKey: process.env.PRIATE_KEY,
     }),
+    RestaurantsModule,
     UsersModule,
     CommonModule,
   ],
