@@ -110,4 +110,20 @@ export class UsersService {
 
     return this.users.save(user);
   }
+
+  async verifyEmail(code: string): Promise<boolean> {
+    const verification = await this.verification.findOne(
+      { code },
+      {
+        relations: ['user'],
+      },
+    );
+
+    if (verification) {
+      verification.user.verified = true;
+      this.users.save(verification.user);
+    }
+
+    return false;
+  }
 }
