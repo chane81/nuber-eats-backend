@@ -56,7 +56,12 @@ export class UsersService {
     password,
   }: LoginInput): Promise<{ ok: boolean; error?: string; token?: string }> {
     try {
-      const user = await this.users.findOne({ email });
+      const user = await this.users.findOne(
+        { email },
+        {
+          select: ['id', 'password'],
+        },
+      );
 
       if (!user) {
         return {
@@ -74,6 +79,7 @@ export class UsersService {
         };
       }
 
+      console.log('userid', user, user.id);
       const token = this.jwtService.sign(user.id);
 
       return {
@@ -112,18 +118,25 @@ export class UsersService {
   }
 
   async verifyEmail(code: string): Promise<boolean> {
-    const verification = await this.verification.findOne(
-      { code },
-      {
-        relations: ['user'],
-      },
-    );
+    try {
+      const verification = await this.verification.findOne(
+        { code },
+        {
+          relations: ['user'],
+        },
+      );
 
-    if (verification) {
-      verification.user.verified = true;
-      this.users.save(verification.user);
+      if (verification) {
+        verification.user.verified = true;
+        this.users.save(verification.user);
+
+        return true;
+      }
+
+      throw new Error();
+    } catch (e) {
+      console.log(e);
+      return false;
     }
-
-    return false;
   }
 }
