@@ -11,7 +11,6 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
-import { CommonModule } from './common/common.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { Restaurant } from './restaurants/entities/restaurant.entity';
@@ -53,13 +52,14 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
       /** graphql schema 파일을 생성시에 아래 옵션 사용 */
       // autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql')
       autoSchemaFile: true,
+      // gql context 에 user set
+      context: ({ req }) => ({ user: req['user'] }),
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIATE_KEY,
     }),
     RestaurantsModule,
     UsersModule,
-    CommonModule,
   ],
   controllers: [],
   providers: [],
