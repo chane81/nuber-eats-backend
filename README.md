@@ -148,3 +148,4 @@
        - 여러 엔티티의 필드를 합침
     5. Composition
        - mapped-type 를 여러개 사용
+
