@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { Verification } from './entities/verification.entity';
 import { JwtService } from '../jwt/jwt.service';
 import { MailService } from '../mail/mail.service';
+import { Repository } from 'typeorm';
 
 /* ============================================= */
 /* mocking */
@@ -25,12 +26,15 @@ const mockMailService = {
 /* mocking */
 /* ============================================= */
 
+type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+
 describe('UserService', () => {
   let service: UsersService;
+  let userRepository: MockRepository<User>;
 
   beforeAll(async () => {
     // module create
-    const modules = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         UsersService,
         {
@@ -53,11 +57,32 @@ describe('UserService', () => {
     }).compile();
 
     // service 주입
-    service = modules.get<UsersService>(UsersService);
+    service = module.get<UsersService>(UsersService);
+    userRepository = module.get(getRepositoryToken(User));
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('createAccount', () => {
+    it('should fail if user exists', async () => {
+      userRepository.findOne.mockResolvedValue({
+        id: 1,
+        email: 'okokmail',
+      });
+
+      const result = await service.createAccount({
+        email: '',
+        password: '',
+        role: 0,
+      });
+
+      expect(result).toMatchObject([
+        false,
+        'There is a user with that email already',
+      ]);
+    });
   });
 
   it.todo('createAccount');
