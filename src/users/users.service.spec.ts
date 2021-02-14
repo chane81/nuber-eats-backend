@@ -82,7 +82,7 @@ describe('UserService', () => {
       role: 0,
     };
     const verificationArgs = {
-      user: { ...createAccountArgs },
+      user: createAccountArgs,
     };
 
     it('should fail if user exists', async () => {
