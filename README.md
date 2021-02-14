@@ -148,3 +148,25 @@
        - 여러 엔티티의 필드를 합침
     5. Composition
        - mapped-type 를 여러개 사용
+
+## Test
+
+- Setup
+  - package.json
+    - collectCoverageFrom 부분 제거(root src 하위 ts 파일 모두 test 할 필요는 없으므로)
+
+      ```json
+      "collectCoverageFrom": [
+        "**/*.(t|j)s"
+      ],
+      ```
+
+    - ignore 설정
+
+      ```json
+      "coveragePathIgnorePatterns": [
+        "node_modules",
+        ".entity.ts",
+        ".constants.ts"
+      ]
+      ```
