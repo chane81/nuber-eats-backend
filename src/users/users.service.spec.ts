@@ -6,7 +6,6 @@ import { Verification } from './entities/verification.entity';
 import { JwtService } from '../jwt/jwt.service';
 import { MailService } from '../mail/mail.service';
 import { Repository } from 'typeorm';
-import { object } from 'joi';
 
 /* ============================================= */
 /* mocking */
