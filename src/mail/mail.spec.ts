@@ -2,16 +2,11 @@ import { Test } from '@nestjs/testing';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import { MailService } from './mail.service';
 import * as FormData from 'form-data';
+import { EmailVar } from './mail.interfaces';
 import got from 'got';
 
 jest.mock('got');
 jest.mock('form-data');
-jest.mock('Buffer', () => ({
-  from: jest.fn(),
-}));
-jest.mock('console', () => ({
-  info: jest.fn(),
-}));
 
 const TEST_DOMAIN = 'TEST-DOMAIN';
 const TEST_API_KEY = 'TEST-API-KEY';
@@ -74,11 +69,37 @@ describe('MailService', () => {
   });
 
   describe('sendEmail', () => {
+    const subject = 'test-subject';
+    const template = 'test-template';
+    const emailVars: EmailVar[] = [
+      {
+        key: 'code',
+        value: 'test-code',
+      },
+      {
+        key: 'username',
+        value: 'test-user',
+      },
+    ];
+
     it('send email', async () => {
-      const ok = await service.sendEmail('', '', []);
+      const ok = await service.sendEmail(subject, template, emailVars);
       const formSpy = jest.spyOn(FormData.prototype, 'append');
 
-      expect(formSpy).toHaveBeenCalled();
+      // form append test
+      expect(formSpy).toHaveBeenCalledWith(
+        'from',
+        `chane81 from Nuber Eats <mailgun@${TEST_DOMAIN}>`,
+      );
+      expect(formSpy).toHaveBeenCalledWith('to', 'chane81@naver.com');
+      expect(formSpy).toHaveBeenCalledWith('subject', subject);
+      expect(formSpy).toHaveBeenCalledWith('template', template);
+      emailVars.forEach((eVar) => {
+        expect(formSpy).toHaveBeenCalledWith(`v:${eVar.key}`, eVar.value);
+      });
+      expect(formSpy).toHaveBeenCalledTimes(6);
+
+      // got post
       expect(got.post).toHaveBeenCalledTimes(1);
       expect(got.post).toHaveBeenCalledWith(
         `https://api.mailgun.net/v3/${TEST_DOMAIN}/messages`,
@@ -96,21 +117,5 @@ describe('MailService', () => {
 
       expect(ok).toEqual(false);
     });
-
-    // it('send email authorization', async () => {
-    //   const ok = await service.sendEmail('', '', []);
-    //   jest.spyOn(Buffer, 'from').mockImplementation(() => {
-    //     return 'test';
-    //   });
-
-    //   //expect(console.info).toHaveBeenCalledWith('test');
-    //   // const bufferSpy = jest.spyOn(Buffer, 'from');
-
-    //   expect(Buffer.from).toHaveBeenCalledTimes(1);
-    //   //expect(Buffer.from).toHaveBeenCalledWith(`api:${TEST_API_KEY}`);
-    // });
   });
-
-  it.todo('sendEmail');
-  it.todo('sendVerificationEmail');
 });
