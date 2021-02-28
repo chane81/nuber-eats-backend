@@ -88,16 +88,16 @@ describe('MailService', () => {
 
       // form append test
       expect(formSpy).toHaveBeenCalledTimes(6);
-      // expect(formSpy).toHaveBeenCalledWith(
-      //   'from',
-      //   `chane81 from Nuber Eats <mailgun@${TEST_DOMAIN}>`,
-      // );
-      // expect(formSpy).toHaveBeenCalledWith('to', 'chane81@naver.com');
-      // expect(formSpy).toHaveBeenCalledWith('subject', subject);
-      // expect(formSpy).toHaveBeenCalledWith('template', template);
-      // emailVars.forEach((eVar) => {
-      //   expect(formSpy).toHaveBeenCalledWith(`v:${eVar.key}`, eVar.value);
-      // });
+      expect(formSpy).toHaveBeenCalledWith(
+        'from',
+        `chane81 from Nuber Eats <mailgun@${TEST_DOMAIN}>`,
+      );
+      expect(formSpy).toHaveBeenCalledWith('to', 'chane81@naver.com');
+      expect(formSpy).toHaveBeenCalledWith('subject', subject);
+      expect(formSpy).toHaveBeenCalledWith('template', template);
+      emailVars.forEach((eVar) => {
+        expect(formSpy).toHaveBeenCalledWith(`v:${eVar.key}`, eVar.value);
+      });
 
       // got post
       expect(got.post).toHaveBeenCalledTimes(1);
