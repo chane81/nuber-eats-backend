@@ -3,15 +3,14 @@ import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import { MailService } from './mail.service';
 import { EmailVar } from './mail.interfaces';
 import * as nodemailer from 'nodemailer';
-import * as Mail from 'nodemailer/lib/mailer';
 
 const TEST_SMTP_USER = 'testuser@gmail.com';
 const TEST_SMTP_PWD = '1111';
 const TEST_FROM_EMAIL = 'test@gmail.com';
 
 jest.mock('nodemailer', () => ({
-  createTransport: jest.fn<Partial<Mail>, []>(() => ({
-    sendMail: jest.fn(async () => true),
+  createTransport: jest.fn().mockImplementation(() => ({
+    sendMail: jest.fn(() => true),
   })),
 }));
 
@@ -81,11 +80,8 @@ describe('MailService', () => {
       },
     ];
 
-    it('send email', async () => {
-      const ok = await service.sendEmail(subject, emailVars);
-
-      const transportSpy = jest.spyOn(nodemailer, 'createTransport');
-      transportSpy.mockImplementation(jest.fn());
+    it('createTransport test', async () => {
+      await service.sendEmail(subject, emailVars);
 
       const transportObj = {
         service: 'gmail',
@@ -100,13 +96,32 @@ describe('MailService', () => {
         },
       };
 
+      // expect nodemailer createTransport
       expect(nodemailer.createTransport).toHaveBeenCalledTimes(1);
       expect(nodemailer.createTransport).toHaveBeenCalledWith(transportObj);
+    });
 
+    it('send mail test', async () => {
+      const ok = await service.sendEmail(subject, emailVars);
+
+      // expect nodemailer sendMail
       let html = '<div>Hi! {{username}}</div><div>Your Code: {{code}}</div>';
       emailVars.forEach(({ key, value }) => {
         const matcher = new RegExp('{{' + key + '}}', 'g');
         html = html.replace(matcher, value);
+      });
+
+      const mockSendMail = (nodemailer.createTransport as jest.Mock).mock
+        .results[0].value.sendMail;
+      expect(mockSendMail).toHaveBeenCalledTimes(1);
+      expect(mockSendMail).toHaveBeenCalledWith({
+        // 보내는 곳 메일 주소
+        from: TEST_FROM_EMAIL,
+        // 받는 곳의 메일 주소
+        to: 'chane81@naver.com',
+        // 제목
+        subject: subject,
+        html,
       });
 
       expect(ok).toEqual(true);
