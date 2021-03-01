@@ -1,6 +1,6 @@
 export interface MailModuleOptions {
-  apiKey: string;
-  domain: string;
+  smtpUser: string;
+  smtpPwd: string;
   fromEmail: string;
 }
 

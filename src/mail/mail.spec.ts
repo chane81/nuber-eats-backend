@@ -1,15 +1,19 @@
 import { Test } from '@nestjs/testing';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import { MailService } from './mail.service';
-import * as FormData from 'form-data';
 import { EmailVar } from './mail.interfaces';
-import got from 'got';
+import * as nodemailer from 'nodemailer';
+import * as Mail from 'nodemailer/lib/mailer';
 
-jest.mock('got');
-jest.mock('form-data');
+const TEST_SMTP_USER = 'testuser@gmail.com';
+const TEST_SMTP_PWD = '1111';
+const TEST_FROM_EMAIL = 'test@gmail.com';
 
-const TEST_DOMAIN = 'TEST-DOMAIN';
-const TEST_API_KEY = 'TEST-API-KEY';
+jest.mock('nodemailer', () => ({
+  createTransport: jest.fn<Partial<Mail>, []>(() => ({
+    sendMail: jest.fn(async () => true),
+  })),
+}));
 
 describe('MailService', () => {
   let service: MailService;
@@ -21,9 +25,9 @@ describe('MailService', () => {
         {
           provide: CONFIG_OPTIONS,
           useValue: {
-            apiKey: TEST_API_KEY,
-            domain: TEST_DOMAIN,
-            fromEmail: 'TEST-FROM-EMAIL',
+            smtpUser: TEST_SMTP_USER,
+            smtpPwd: TEST_SMTP_PWD,
+            fromEmail: TEST_FROM_EMAIL,
           },
         },
       ],
@@ -51,26 +55,21 @@ describe('MailService', () => {
       );
 
       expect(service.sendEmail).toBeCalledTimes(1);
-      expect(service.sendEmail).toBeCalledWith(
-        'Verify Your Email',
-        'verify-email',
-        [
-          {
-            key: 'code',
-            value: sendVerificationEmailArgs.code,
-          },
-          {
-            key: 'username',
-            value: sendVerificationEmailArgs.email,
-          },
-        ],
-      );
+      expect(service.sendEmail).toBeCalledWith('Verify Your Email', [
+        {
+          key: 'code',
+          value: sendVerificationEmailArgs.code,
+        },
+        {
+          key: 'username',
+          value: sendVerificationEmailArgs.email,
+        },
+      ]);
     });
   });
 
   describe('sendEmail', () => {
     const subject = 'test-subject';
-    const template = 'test-template';
     const emailVars: EmailVar[] = [
       {
         key: 'code',
@@ -83,37 +82,41 @@ describe('MailService', () => {
     ];
 
     it('send email', async () => {
-      const ok = await service.sendEmail(subject, template, emailVars);
-      const formSpy = jest.spyOn(FormData.prototype, 'append');
+      const ok = await service.sendEmail(subject, emailVars);
 
-      // form append test
-      expect(formSpy).toHaveBeenCalledTimes(6);
-      expect(formSpy).toHaveBeenCalledWith(
-        'from',
-        `chane81 from Nuber Eats <mailgun@${TEST_DOMAIN}>`,
-      );
-      expect(formSpy).toHaveBeenCalledWith('to', 'chane81@naver.com');
-      expect(formSpy).toHaveBeenCalledWith('subject', subject);
-      expect(formSpy).toHaveBeenCalledWith('template', template);
-      emailVars.forEach((eVar) => {
-        expect(formSpy).toHaveBeenCalledWith(`v:${eVar.key}`, eVar.value);
+      const transportSpy = jest.spyOn(nodemailer, 'createTransport');
+      transportSpy.mockImplementation(jest.fn());
+
+      const transportObj = {
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          // gmail user email 입력 (ex. test@gmail.com)
+          user: TEST_SMTP_USER,
+          // gmail user password 입력
+          pass: TEST_SMTP_PWD,
+        },
+      };
+
+      expect(nodemailer.createTransport).toHaveBeenCalledTimes(1);
+      expect(nodemailer.createTransport).toHaveBeenCalledWith(transportObj);
+
+      let html = '<div>Hi! {{username}}</div><div>Your Code: {{code}}</div>';
+      emailVars.forEach(({ key, value }) => {
+        const matcher = new RegExp('{{' + key + '}}', 'g');
+        html = html.replace(matcher, value);
       });
-
-      // got post
-      expect(got.post).toHaveBeenCalledTimes(1);
-      expect(got.post).toHaveBeenCalledWith(
-        `https://api.mailgun.net/v3/${TEST_DOMAIN}/messages`,
-        expect.any(Object),
-      );
 
       expect(ok).toEqual(true);
     });
 
     it('fails on error', async () => {
-      jest.spyOn(got, 'post').mockImplementation(() => {
+      jest.spyOn(nodemailer, 'createTransport').mockImplementation(() => {
         throw new Error();
       });
-      const ok = await service.sendEmail('', '', []);
+      const ok = await service.sendEmail('', []);
 
       expect(ok).toEqual(false);
     });
