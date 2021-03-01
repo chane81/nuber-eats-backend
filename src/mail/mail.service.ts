@@ -36,7 +36,7 @@ export class MailService {
       });
 
       // send email
-      const info = await transporter.sendMail({
+      await transporter.sendMail({
         // 보내는 곳 메일 주소
         from: this.options.fromEmail,
         // 받는 곳의 메일 주소
