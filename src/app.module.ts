@@ -20,7 +20,7 @@ import { MailModule } from './mail/mail.module';
     // process env set
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
+      envFilePath: `.env.${process.env.NODE_ENV}`,
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod', 'test'),
         DB_HOST: Joi.string().required(),
@@ -43,7 +43,7 @@ import { MailModule } from './mail/mail.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
-      logging: process.env.NODE_ENV !== 'prod',
+      logging: process.env.NODE_ENV === 'dev',
       // Heroku Postgres DB 연결시
       // ssl: {
       //   rejectUnauthorized: true,
