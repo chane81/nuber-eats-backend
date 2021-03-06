@@ -5,6 +5,7 @@ import { AppModule } from '../src/app.module';
 import { getConnection, Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Verification } from 'src/users/entities/verification.entity';
 
 // Jest did not exit one second after the test run has completed. 대응
 // nodemailer 로 메일 보내지 않게 mock 함
@@ -23,6 +24,7 @@ const testUser = {
 describe('UserModule (e2e)', () => {
   let app: INestApplication;
   let usersRepository: Repository<User>;
+  let verificationRepository: Repository<Verification>;
   let jwtToken: string;
 
   beforeAll(async () => {
@@ -32,6 +34,9 @@ describe('UserModule (e2e)', () => {
 
     app = module.createNestApplication();
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
+    verificationRepository = module.get<Repository<Verification>>(
+      getRepositoryToken(Verification),
+    );
     await app.init();
   });
 
@@ -272,6 +277,136 @@ describe('UserModule (e2e)', () => {
     });
   });
 
-  it.todo('editProfile');
-  it.todo('verifyEmail');
+  describe('editProfile', () => {
+    const NEW_EMAIL = 'chch@haha.com';
+    it('should change email', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .set('X-JWT', jwtToken)
+        .send({
+          query: `
+            mutation {
+              editProfile(input: {
+                email: "${NEW_EMAIL}"
+              }) {
+                ok
+                error
+              }
+            }
+          `,
+        })
+        .expect(200)
+        .expect((res) => {
+          const {
+            body: {
+              data: {
+                editProfile: { ok, error },
+              },
+            },
+          } = res;
+
+          console.log('res', res.body.data);
+          expect(ok).toBe(true);
+          expect(error).toBe(null);
+        });
+    });
+
+    it('should have new email', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .set('X-JWT', jwtToken)
+        .send({
+          query: `
+                {
+                  me {
+                    email
+                  }
+                }
+              `,
+        })
+        .expect(200)
+        .expect((res) => {
+          const {
+            body: {
+              data: {
+                me: { email },
+              },
+            },
+          } = res;
+
+          expect(email).toBe(NEW_EMAIL);
+        });
+    });
+  });
+
+  describe('verifyEmail', () => {
+    let verificationCode: string;
+
+    beforeAll(async () => {
+      const [verification] = await verificationRepository.find();
+      verificationCode = verification.code;
+    });
+
+    it('should verify email', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .send({
+          query: `
+          mutation {
+            verifyEmail(input: {
+              code: "${verificationCode}"
+            }) {
+              error
+              ok
+            }
+          }
+        `,
+        })
+        .expect(200)
+        .expect((res) => {
+          const {
+            body: {
+              data: {
+                verifyEmail: { ok, error },
+              },
+            },
+          } = res;
+
+          expect(ok).toBe(true);
+          expect(error).toBe(null);
+        });
+    });
+    it('should fail on wrong verification code', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .send({
+          query: `
+          mutation {
+            verifyEmail(input: {
+              code: "fail-code"
+            }) {
+              error
+              ok
+            }
+          }
+        `,
+        })
+        .expect(200)
+        .expect((res) => {
+          const {
+            body: {
+              data: {
+                verifyEmail: { ok, error },
+              },
+            },
+          } = res;
+
+          //expect(ok).toBe(true)
+
+          // 아래와 같이 toBeFalsy() 를 사용해도 됨
+          expect(ok).toBeFalsy();
+          expect(error).toBe('Verification not found.');
+        });
+    });
+  });
 });
