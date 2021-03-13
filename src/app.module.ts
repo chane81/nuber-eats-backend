@@ -14,6 +14,9 @@ import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { Verification } from './users/entities/verification.entity';
 import { MailModule } from './mail/mail.module';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
+import { Category } from './restaurants/entities/category.entity';
+import { RestaurantsModule } from './restaurants/restaurants.module';
 
 @Module({
   imports: [
@@ -48,7 +51,7 @@ import { MailModule } from './mail/mail.module';
       // ssl: {
       //   rejectUnauthorized: true,
       // },
-      entities: [User, Verification],
+      entities: [User, Verification, Restaurant, Category],
     }),
     // graphql set
     GraphQLModule.forRoot({
@@ -61,12 +64,13 @@ import { MailModule } from './mail/mail.module';
     JwtModule.forRoot({
       privateKey: process.env.PRIATE_KEY,
     }),
-    UsersModule,
     MailModule.forRoot({
       smtpUser: process.env.NODEMAILER_USER,
       smtpPwd: process.env.NODEMAILER_PASSWORD,
       fromEmail: process.env.NODEMAILER_FROM_EMAIL,
     }),
+    UsersModule,
+    RestaurantsModule,
   ],
   controllers: [],
   providers: [],
