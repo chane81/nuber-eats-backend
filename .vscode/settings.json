@@ -5,7 +5,7 @@
   "explorer.compactFolders": false,
   "editor.suggest.localityBonus": true,
   "editor.suggestSelection": "first",
-  "editor.snippetSuggestions": "top",
+  "editor.snippetSuggestions": "bottom",
   // "editor.quickSuggestions": {
   //   "other": true,
   //   "comments": false,
