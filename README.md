@@ -170,3 +170,134 @@
         ".constants.ts"
       ]
       ```
+
+## AuthGruard
+
+- guard reference url
+  <https://docs.nestjs.com/guards>
+
+- 기본 auth guard 사용
+  - 기본적으로 아래와 같이 CanActivate 에 대한 구현을 해서 return true/false 를 통해 해당 api 에 대한 기본 auth guard를 구축할 수 있다.
+
+  ```js
+  import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+  import { Observable } from 'rxjs';
+
+  // AuthGuard 모듈
+  @Injectable()
+  export class AuthGuard implements CanActivate {
+    canActivate(
+      context: ExecutionContext,
+    ): boolean | Promise<boolean> | Observable<boolean> {
+      // graphql context 가져오기
+      const gqlContext = GqlExecutionContext.create(context).getContext();
+      const user: User = gqlContext['user'];
+
+      if (!user) {
+        return false;
+      }
+    }
+  }
+
+  // api 에서 사용
+  @Mutation(() => EditRestaurantOutput)
+  @UseGuards(AuthGuard)
+  async editRestaurant(
+    @Args('input') editRestaurantInput: EditRestaurantInput,
+  ): Promise<EditRestaurantOutput> {
+    return { ok: true };
+  }
+  ```
+
+- role based auth guard
+  - 위의 기본적이 auth gurard 외에 실무에서 필요한 role base guard 를 구축할 수 있다.
+  - 아래의 SetMetadata 를 통해 api 데코레이터에 선언한 role 를 auth guard 모듈에서 Reflector 를 이용하여 가져와서 context 와 비교해서 role guard 를 할 수 있다.
+  - 글로벌로 auth guard를 사용하기 위해 provider 로 APP_GUARD 를 사용한다.
+  - 키워드
+    - SetMetadata - 데코레이더에서 사용
+    - Reflector - 모듈에서 metadata 가져오기위해 사용
+    - APP_GUARD - 글로벌 사용을 위한 provider
+
+  - role 데코레이터 작성
+
+  ```js - role.decorator.ts
+  import { SetMetadata } from '@nestjs/common';
+  import { UserRole } from 'src/users/entities/user.entity';
+
+  export type AllowedRoles = keyof typeof UserRole | 'Any';
+
+  export const Role = (roles: AllowedRoles[]) => SetMetadata('roles', roles);
+
+  ```
+
+  - auth guard 모듈 작성
+
+  ```js auth.guards.ts
+  import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+  import { Reflector } from '@nestjs/core';
+  import { GqlExecutionContext } from '@nestjs/graphql';
+  import { User } from 'src/users/entities/user.entity';
+  import { AllowedRoles } from './role.decorator';
+  @Injectable()
+  export class AuthGuard implements CanActivate {
+    constructor(private readonly reflector: Reflector) {}
+
+    canActivate(context: ExecutionContext) {
+      const roles = this.reflector.get<AllowedRoles>(
+        'roles',
+        context.getHandler(),
+      );
+
+      // 만약 roles 가 없다면 public 권한
+      if (!roles) {
+        return true;
+      }
+
+      const gqlContext = GqlExecutionContext.create(context).getContext();
+      const user: User = gqlContext['user'];
+
+      if (!user) {
+        return false;
+      }
+
+      // Any role 의 경우는 user 가 있는지 여부만 체크
+      if (roles.includes('Any')) {
+        return true;
+      }
+
+      // 만약 user 가 있다면 role 를 체크
+      return roles.includes(user.role);
+    }
+  }
+
+  ```
+
+  - auth 글로벌 모듈 작성 (APP_GUARD를 프로바이더로 사용)
+
+  ```js auth.module.ts
+  import { Module } from '@nestjs/common';
+  import { APP_GUARD } from '@nestjs/core';
+  import { AuthGuard } from './auth.guard';
+
+  @Module({
+    providers: [
+      {
+        provide: APP_GUARD,
+        useClass: AuthGuard,
+      },
+    ],
+  })
+  export class AuthModule {}
+
+  ```
+
+  - 최종 app.module.ts 에 auth.moduel.ts 를 등록
+  
+  ```js app.module.ts
+  @Module({
+  imports: [
+    ...
+    AuthModule
+    ...
+  ]
+  ```
