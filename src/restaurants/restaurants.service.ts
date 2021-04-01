@@ -18,6 +18,7 @@ import {
   DeleteRestaurantOutput,
 } from './dtos/delete-restaurant.dto';
 import { AllCategoriesOutPut } from './dtos/all-categories.dto';
+import { CategoryInput, CategoryOutput } from './dtos/category.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -25,6 +26,9 @@ export class RestaurantService {
   constructor(
     @InjectRepository(Restaurant)
     private readonly restaurants: Repository<Restaurant>,
+
+    @InjectRepository(User)
+    private readonly user: Repository<User>,
 
     // custome repository (@InjectRepository(Category) 필요없음)
     // @InjectRepository(Category)
@@ -160,5 +164,31 @@ export class RestaurantService {
 
   countRestaurants(category: Category): Promise<number> {
     return this.restaurants.count({ category });
+  }
+
+  async findCategoryBySlug({ slug }: CategoryInput): Promise<CategoryOutput> {
+    try {
+      const category = await this.categories.findOne(
+        { slug },
+        { relations: ['restaurants', 'restaurants.owner'] },
+      );
+
+      if (!category) {
+        return {
+          ok: false,
+          error: 'Category not found',
+        };
+      }
+
+      return {
+        ok: true,
+        category,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not load category',
+      };
+    }
   }
 }

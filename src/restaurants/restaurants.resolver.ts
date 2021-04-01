@@ -26,6 +26,7 @@ import {
 } from './dtos/delete-restaurant.dto';
 import { Category } from './entities/category.entity';
 import { AllCategoriesOutPut } from './dtos/all-categories.dto';
+import { CategoryInput, CategoryOutput } from './dtos/category.dto';
 
 @Resolver(() => Restaurant)
 export class RestaurantResolver {
@@ -74,12 +75,16 @@ export class CategoryReolver {
   // computed field, dynamic field
   @ResolveField(() => Int)
   restaurantCount(@Parent() category: Category): Promise<number> {
-    console.log('parent', category);
     return this.restaurantService.countRestaurants(category);
   }
 
   @Query(() => AllCategoriesOutPut)
   async allCategories(): Promise<AllCategoriesOutPut> {
     return await this.restaurantService.allCategories();
+  }
+
+  @Query(() => CategoryOutput)
+  category(@Args() categoryInput: CategoryInput): Promise<CategoryOutput> {
+    return this.restaurantService.findCategoryBySlug(categoryInput);
   }
 }
