@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Raw, Repository } from 'typeorm';
 import { Restaurant } from './entities/restaurant.entity';
 import {
   CreateRestaurantInput,
@@ -20,6 +20,11 @@ import {
 import { AllCategoriesOutPut } from './dtos/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dtos/category.dto';
 import { RestaurantsInput, RestaurantsOutput } from './dtos/restaurants.dto';
+import { RestaurantInput, RestaurantOutput } from './dtos/restaurant';
+import {
+  SearchRestaurantInput,
+  SearchRestaurantOutput,
+} from './dtos/search-restaurant.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -225,6 +230,62 @@ export class RestaurantService {
       return {
         ok: false,
         error: 'Could not load restaurants',
+      };
+    }
+  }
+
+  async findRestaurantById({
+    restaurantId,
+  }: RestaurantInput): Promise<RestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOne(restaurantId);
+
+      if (!restaurant) {
+        return {
+          ok: false,
+          error: 'Restausrant not found',
+        };
+      }
+
+      return {
+        ok: true,
+        restaurant,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not find restaurant',
+      };
+    }
+  }
+
+  async searchRestaurantByName({
+    query,
+    page,
+  }: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
+    try {
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({
+        where: {
+          // Like 로는 대소문자를 구분하여 검색
+          // name: Like(`%${query}%`),
+
+          // Raw 를 이용해 대소문자 구분없이 검색되게 쿼리 작성
+          name: Raw((name) => `${name} ILIKE '%${query}%'`),
+        },
+        skip: (page - 1) * 25,
+        take: 25,
+      });
+
+      return {
+        ok: true,
+        restaurants,
+        totalResults,
+        totalPages: Math.ceil(totalResults / 25),
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not search for restaurants ',
       };
     }
   }
