@@ -113,6 +113,8 @@
   })
   ```
 
+- `ManyToOne()` 관계에서는 `nullable` 옵션의 기본값이 `false` 이다.
+
 ## Service & Module & Inject & Resolver
 
 - Module
