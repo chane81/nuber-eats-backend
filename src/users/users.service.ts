@@ -104,7 +104,12 @@ export class UsersService {
 
   async findById(id: number) {
     try {
-      const user = await this.users.findOneOrFail({ id });
+      const user = await this.users.findOneOrFail(
+        { id },
+        {
+          relations: ['restaurants'],
+        },
+      );
       return {
         ok: true,
         user,
