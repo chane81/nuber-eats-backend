@@ -1,0 +1,56 @@
+# HTTP HEADERS
+{
+  "X-JWT": "JWT TOKEN ~~~"
+}
+
+mutation {
+  createDish(input: {
+    name: "Mexican Chicken"
+    price: 12
+    restaurantId: 2
+    description: "Delicious!!"
+    options: [
+      {
+        name: "Spice Level"
+        choices: [
+          {
+            name: "Little Bit"
+          },
+          {
+            name: "Kill Me"
+          }
+        ]
+      },
+      {
+        name: "Pickle",
+        extra: 1
+      },
+      {
+        name: "Size"
+        choices: [{name: "L", extra: 2}, {name: "XL", extra: 5}]
+      }
+    ]
+  }) {
+    error
+    ok
+  }
+}
+
+mutation {
+  editDish(input: {
+    dishId: 2,
+    name: "Super Mexican Taco Chicken"
+  }) {
+    ok
+    error
+  }
+}
+
+mutation {
+  deleteDish(input: {
+    dishId: 2
+  }) {
+    ok,
+    error
+  }
+}

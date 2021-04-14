@@ -1,0 +1,43 @@
+# HTTP HEADERS
+{
+  "X-JWT": "JWT TOKEN ~~~"
+}
+
+query {
+  allCategories {
+    error
+    ok
+    categories {
+      id
+      createAt
+      name
+      slug
+      restaurantCount
+    }
+  }
+}
+
+query {
+  category(input: {
+    slug: "korean-bbq",
+    page: 2
+  }) {
+    error
+    ok
+    totalPages
+    category {
+      id
+      name
+      slug
+      restaurantCount
+      restaurants {
+        id
+        name
+        owner {
+          role
+          email
+        }
+      }
+    }
+  }
+}

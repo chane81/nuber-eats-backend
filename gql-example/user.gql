@@ -1,0 +1,41 @@
+# HTTP HEADERS
+{
+  "X-JWT": "JWT TOKEN ~~~"
+}
+
+mutation {
+  createAccount(
+    input: { email: "chane@naver.com", password: "12345", role: Owner }
+  ) {
+    error
+    ok
+  }
+}
+
+mutation {
+  login(input: { email: "chane@naver.com", password: "12345" }) {
+    error
+    ok
+    token
+  }
+}
+
+query {
+  userProfile(userId: 5) {
+    error
+    ok
+    user {
+      id
+      createAt
+      updateAt
+      email
+      role
+      verified
+      restaurants {
+        id
+        name
+        address
+      }
+    }
+  }
+}

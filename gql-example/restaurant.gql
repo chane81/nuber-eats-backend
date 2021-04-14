@@ -1,0 +1,63 @@
+# HTTP HEADERS
+{
+  "X-JWT": "JWT TOKEN ~~~"
+}
+
+mutation {
+  createRestaurant(
+    input: {
+      name: "my Cafe"
+      coverImg: ""
+      address: "잠실"
+      categoryName: "korean Star boooks"
+    }
+  ) {
+    error
+    ok
+  }
+}
+
+query {
+  restaurants(input: {
+    page: 1
+  }) {
+    error
+    ok
+    totalPages
+    totalResults
+    restaurants {
+      id
+      createAt
+      updateAt
+      name
+      coverImg
+      address
+      category {
+        id
+        name
+      }
+      owner {
+        email
+      }
+    }
+  }
+}
+
+mutation {
+  deleteRestaurant(input: {
+    restaurantId: 1
+  }) {
+    error
+    ok
+  }
+}
+
+mutation {
+  editRestaurant(input: {
+    restaurantId: 2,
+    categoryName: "korean bbq"
+  }) {
+    error
+    ok
+  }
+}
