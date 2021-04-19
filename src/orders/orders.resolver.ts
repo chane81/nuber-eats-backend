@@ -1,8 +1,10 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
+import { EditDishInput } from 'src/restaurants/dtos/edit-dish.dto';
 import { User } from 'src/users/entities/user.entity';
 import { CreateOrderInput, CreateOrderOutput } from './dtos/create-order.dto';
+import { EditOrderInput } from './dtos/edit-order.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { Order } from './entities/order.entity';
@@ -37,5 +39,14 @@ export class OrderResolver {
     @Args('input') getOrderInput: GetOrderInput,
   ): Promise<GetOrderOutput> {
     return this.ordersService.getOrder(user, getOrderInput);
+  }
+
+  @Mutation(() => EditOrderInput)
+  @Role(['Any'])
+  async editOrder(
+    @AuthUser() user: User,
+    @Args('input') editOrderInput: EditOrderInput,
+  ) {
+    return this.ordersService.editOrder(user, editOrderInput);
   }
 }
