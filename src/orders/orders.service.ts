@@ -9,7 +9,7 @@ import { EditOrderInput, EditOrderOutput } from './dtos/edit-order.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { OrderItem } from './entities/order-item.entity';
-import { Order } from './entities/order.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
@@ -217,21 +217,68 @@ export class OrderService {
     user: User,
     { id: orderId, status }: EditOrderInput,
   ): Promise<EditOrderOutput> {
-    const order = await this.orders.findOne(orderId, {
-      relations: ['restaurant'],
-    });
+    try {
+      const order = await this.orders.findOne(orderId, {
+        relations: ['restaurant'],
+      });
 
-    if (!order) {
+      if (!order) {
+        return {
+          ok: false,
+          error: 'Order not found.',
+        };
+      }
+
+      if (!this.canSeeOrder(user, order)) {
+        return {
+          ok: false,
+          error: `Can't see this`,
+        };
+      }
+
+      let canEdit = true;
+
+      // client 면 수정 x
+      if (user.role === UserRole.Client) {
+        canEdit = false;
+      }
+
+      // owner 는 cooking, cooked 상태에 대해서 수정 o
+      if (user.role === UserRole.Owner) {
+        if (status !== OrderStatus.Cooking && status !== OrderStatus.Cooked) {
+          canEdit = false;
+        }
+      }
+
+      // delivery 는 pickedup, delivered 상태에 대해서 수정 o
+      if (user.role === UserRole.Delivery) {
+        if (
+          status !== OrderStatus.PickedUp &&
+          status !== OrderStatus.Delivered
+        ) {
+          canEdit = false;
+        }
+      }
+
+      if (!canEdit) {
+        return {
+          ok: false,
+          error: `You can't do that.`,
+        };
+      }
+
+      await this.orders.save({
+        id: orderId,
+        status,
+      });
+
       return {
-        ok: false,
-        error: 'Order not found.',
+        ok: true,
       };
-    }
-
-    if (!this.canSeeOrder(user, order)) {
+    } catch {
       return {
         ok: false,
-        error: `Can't see this`,
+        error: 'Could not edit order.',
       };
     }
   }
