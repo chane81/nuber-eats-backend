@@ -72,7 +72,15 @@ import { OrderItem } from './orders/entities/order-item.entity';
       // autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql')
       autoSchemaFile: true,
       // gql context 에 user set
-      context: ({ req }) => ({ user: req['user'] }),
+      context: ({ req, connection }) => {
+        if (req) {
+          return { user: req['user'] };
+        } else {
+          console.log('con', connection);
+        }
+      },
+      // subscription 설정
+      installSubscriptionHandlers: true,
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIATE_KEY,
