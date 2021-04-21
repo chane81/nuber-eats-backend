@@ -27,6 +27,9 @@
   - yarn add jsonwebtoken
   - yarn add -D @types/jsonwebtoken
 
+- subscription 관련 인스톨
+  - yarn add graphql-subscriptions
+
 ## nest cli 명령
 
 - 모듈 생성
@@ -63,6 +66,48 @@
       @IsBoolean()
       isVegan: boolean;
     }
+    ```
+
+- graphql subscription 관련
+  - subscription 은 req 가 없다. ws(websocket) 으로 데이터를 주고 받기 때문에 app.modules.ts 에서 req 를 받아 `user: req['user']` 로 리턴하는 부분을 수정해야 한다.
+
+  - 관련 url
+  <https://github.com/apollographql/graphql-subscriptions>
+
+  - 사용 예시 code
+
+    ```javascript
+    import { PubSub } from 'graphql-subscriptions';
+
+    const pubsub = new PubSub();
+    
+    @Mutation(() => Boolean)
+    potatoReady() {
+      pubsub.publish('hotPotatos', { readyPotato: 'Your potato is Ready.' });
+
+      return true;
+    }
+
+    @Subscription(() => String)
+    readyPotato() {
+      return pubsub.asyncIterator('hotPotatos');
+    }
+    ```
+
+  - app.modules.ts 세팅
+
+    ```javascript
+      // 기존 코드
+      // context: ({ req }) => ({ user: req['user'] }),
+
+      // 수정된 코드
+      context: ({ req, connection }) => {
+        if (req) {
+          return { user: req['user'] };
+        } else {
+          console.log('con', connection);
+        }
+      },
     ```
 
 ## postgres
