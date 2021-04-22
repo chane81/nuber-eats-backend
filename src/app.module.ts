@@ -73,11 +73,11 @@ import { OrderItem } from './orders/entities/order-item.entity';
       autoSchemaFile: true,
       // gql context 에 user set
       context: ({ req, connection }) => {
-        if (req) {
-          return { user: req['user'] };
-        } else {
-          console.log('con', connection);
-        }
+        const TOKEN_KEY = 'x-jwt';
+
+        return {
+          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+        };
       },
       // subscription 설정
       installSubscriptionHandlers: true,
@@ -98,12 +98,15 @@ import { OrderItem } from './orders/entities/order-item.entity';
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  // 미들웨어 setup
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '/graphql',
-      method: RequestMethod.ALL,
-    });
-  }
-}
+export class AppModule {}
+
+// subscription 기능사용으로 JwtMiddleware 사용부분 제거
+// export class AppModule implements NestModule {
+//   // 미들웨어 setup
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(JwtMiddleware).forRoutes({
+//       path: '/graphql',
+//       method: RequestMethod.ALL,
+//     });
+//   }
+// }
