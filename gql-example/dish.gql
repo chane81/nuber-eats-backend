@@ -1,6 +1,6 @@
 # HTTP HEADERS
 {
-  "X-JWT": "JWT TOKEN ~~~"
+  "x-jwt": "JWT TOKEN ~~~"
 }
 
 mutation {

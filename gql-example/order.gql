@@ -1,6 +1,6 @@
 # HTTP HEADERS - Client Role 의 토큰
 {
-  "X-JWT": "JWT TOKEN ~~~"
+  "x-jwt": "JWT TOKEN ~~~"
 }
 
 mutation {
