@@ -30,7 +30,7 @@ describe('UserModule (e2e)', () => {
   const baseTest = () => request(app.getHttpServer()).post(GRAPHQL_ENDPOINT);
   const publicTest = (query: string) => baseTest().send({ query });
   const privateTest = (query: string) =>
-    baseTest().set('X-JWT', jwtToken).send({ query });
+    baseTest().set('x-jwt', jwtToken).send({ query });
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
