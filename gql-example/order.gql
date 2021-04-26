@@ -23,3 +23,21 @@ mutation {
   }
 }
 
+mutation {
+  editOrder(input: {
+    id: 12,
+    status: Cooked
+  }) {
+    error
+    ok
+  }
+}
+
+mutation {
+  takeOrder(input: {
+    id: 12
+  }) {
+    error
+    ok
+  }
+}
