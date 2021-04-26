@@ -6,13 +6,13 @@
 mutation {
   createOrder(
     input: {
-      restaurantId: 2
+      restaurantId: 4
       items: [
         {
-          dishId: 4
+          dishId: 7
           options: [
-            { name: "Spice Level", choice: { name: "Kill Me" } }
-            { name: "Size", choice: { name: "XL", extra: 5 } }
+            { name: "Spice Level", choice: "Kill Me" }
+            { name: "Size", choice: "XL", extra: 5 }
           ]
         }
       ]
@@ -22,3 +22,4 @@ mutation {
     ok
   }
 }
+
