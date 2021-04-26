@@ -159,6 +159,35 @@
   ```
 
 - `ManyToOne()` 관계에서는 `nullable` 옵션의 기본값이 `false` 이다.
+- RelationShip
+  - entity 관계 데이터를 가져올때 아래와 같이 relation 을 써서 가져온다.
+  - 아래는 엔티티 호출할 때 관계데이터를 각각 가져오고 싶은것만 설정 할 때 작성하는 방법이다.
+  
+  ```js
+  const order = await this.orders.findOne(orderId, {
+    relations: ['restaurant'],
+  });
+  ```
+
+  - 매 호출시 마다 관계된 데이터를 가져오게 설정하고 싶으면 entity 작성시 로드하고 싶은 필드 부분에 아래와 같이 eager, lazy 를 쓰면된다.
+  - 단 lazy 방식은 Promise 표현법을 써서 해당 필드 표현을 해주어야 한다.
+  - 참고 url
+    <https://orkhan.gitbook.io/typeorm/docs/eager-and-lazy-relations>
+
+  ```js - eager 방식
+  @Field(() => [OrderItem])
+  @ManyToMany(() => OrderItem, {
+    eager: true,
+  })
+  @JoinTable()
+  items: OrderItem[];
+  ```
+
+  ```js - lazy 방식
+   @ManyToMany(type => Category, category => category.questions)
+  @JoinTable()
+  categories: Promise<Category[]>;
+  ```
 
 ## Service & Module & Inject & Resolver
 
