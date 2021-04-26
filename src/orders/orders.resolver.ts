@@ -9,8 +9,15 @@ import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { Order } from './entities/order.entity';
 import { OrderService } from './orders.service';
 import { PubSub } from 'graphql-subscriptions';
-import { PUB_SUB, NEW_PENDING_ORDER } from 'src/common/common.constants';
+import {
+  PUB_SUB,
+  NEW_PENDING_ORDER,
+  NEW_COOKED_ORDER,
+  NEW_ORDER_UPDATE,
+} from 'src/common/common.constants';
 import { Inject } from '@nestjs/common';
+import { OrderUpdatesInput } from './dtos/order-updates.dto';
+import { TakeOrderInput, TakeOrderOutput } from './dtos/take-order.dto';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -56,14 +63,50 @@ export class OrderResolver {
   }
 
   @Subscription(() => Order, {
-    filter: (payload, _, context) => {
-      console.log(payload, context);
-
-      return true;
+    filter: ({ pendingOrders: { ownerId } }, _, { user }) => {
+      return ownerId === user.id;
     },
+    resolve: ({ pendingOrders: { order } }) => order,
   })
   @Role(['Owner'])
   pendingOrders() {
     return this.pubSub.asyncIterator(NEW_PENDING_ORDER);
+  }
+
+  @Subscription(() => Order)
+  @Role(['Delivery'])
+  cookedOrders() {
+    return this.pubSub.asyncIterator(NEW_COOKED_ORDER);
+  }
+
+  @Subscription(() => Order, {
+    filter: (
+      { orderUpdates: order }: { orderUpdates: Order },
+      { input }: { input: OrderUpdatesInput },
+      { user }: { user: User },
+    ) => {
+      if (
+        order.driverId !== user.id &&
+        order.customerId !== user.id &&
+        order.restaurant.ownerId === user.id
+      ) {
+        return false;
+      }
+
+      return order.id === input.id;
+    },
+  })
+  @Role(['Any'])
+  orderUpdates(@Args('input') orderUpdatesInput: OrderUpdatesInput) {
+    return this.pubSub.asyncIterator(NEW_ORDER_UPDATE);
+  }
+
+  @Mutation(() => TakeOrderOutput)
+  @Role(['Delivery'])
+  async takeOrder(
+    @AuthUser() driver: User,
+    @Args('input') takeOrderInput: TakeOrderInput,
+  ): Promise<TakeOrderOutput> {
+    return this.ordersService.takeOrder(driver, takeOrderInput);
   }
 }
