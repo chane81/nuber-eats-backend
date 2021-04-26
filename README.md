@@ -348,3 +348,21 @@
     ...
   ]
   ```
+
+## Subscription (필요 구독수)
+
+- Pending Order (Owner 만 볼 수 있음)
+  - subscription
+    > `newOrder`
+  - trigger
+    > `createOrder`
+- Order Status (Customer, Delivery, Owner 모두 다 볼 수 있어야 함)
+  - subscription
+    > `orderUpdate`
+  - trigger
+    > `editOrder`
+- Pending Pickup Order (Delivery 만 볼 수 있음)
+  - subscription
+    > `orderUpdate`
+  - trigger
+    > `editOrder`
