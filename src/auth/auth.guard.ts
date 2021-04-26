@@ -39,8 +39,6 @@ export class AuthGuard implements CanActivate {
 
         gqlContext['user'] = user;
 
-        console.log('user', user);
-
         // Any role 의 경우는 user 가 있는지 여부만 체크
         if (roles.includes('Any')) {
           return true;
