@@ -158,7 +158,15 @@
   })
   ```
 
-- `ManyToOne()` 관계에서는 `nullable` 옵션의 기본값이 `false` 이다.
+- `@ManyToOne` 관계에서는 `nullable` 옵션의 기본값이 `false` 이다.
+- `@OneToMany` 는 `@ManyToOne` 을 반드시 가져야 하지만, `@ManyToOne` 는 `@OneToMany`를 반드시 가질 필요는 없다,
+  - <https://github.com/typeorm/typeorm/blob/master/docs/many-to-one-one-to-many-relations.md>
+
+  ```plaintext
+    If you want to use @OneToMany, @ManyToOne is required.
+    If you only care about the @ManyToOne relationship, you can define it without having @OneToMany on the related entity
+  ```
+
 - RelationShip
   - entity 관계 데이터를 가져올때 아래와 같이 relation 을 써서 가져온다.
   - 아래는 엔티티 호출할 때 관계데이터를 각각 가져오고 싶은것만 설정 할 때 작성하는 방법이다.
