@@ -1,0 +1,26 @@
+# HTTP HEADERS
+{
+  "x-jwt": "JWT TOKEN ~~~"
+}
+
+mutation {
+  createPayment(input: {
+    transactionId: "xxxxxx",
+    restaurantId: 2
+  }) {
+    error
+    ok
+  }
+}
+
+query {
+  getPayments {
+    error
+    ok
+    payments {
+      id
+      transactionId
+    }
+  }
+}
+ 
