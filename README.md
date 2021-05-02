@@ -403,3 +403,13 @@
     > `orderUpdate`
   - trigger
     > `editOrder`
+
+
+## Schedule (@nestjs/schedule)
+
+- nest 에서 제공하는 스케쥴 기능
+  - cron jobs
+  - timeouts
+  - intervals
+- 참고링크
+  <https://docs.nestjs.com/techniques/task-scheduling>
