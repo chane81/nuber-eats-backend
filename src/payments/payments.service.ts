@@ -91,8 +91,10 @@ export class PaymentService {
     console.log(job);
   }
 
-  @Timeout(2000)
+  @Interval('myInterval', 2000)
   async checkForPayments2() {
     console.log('Checking for payments22...');
+    const interval = this.scheduleRegistry.getInterval('myInterval');
+    clearInterval(interval);
   }
 }
