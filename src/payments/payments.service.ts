@@ -45,6 +45,16 @@ export class PaymentService {
         };
       }
 
+      // promote +7 일 set
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+
+      restaurant.isPromoted = true;
+      restaurant.promotedUntil = date;
+
+      await this.restaurants.save(restaurant);
+
+      // payment save
       await this.payments.save(
         this.payments.create({
           transactionId,
@@ -80,21 +90,5 @@ export class PaymentService {
         error: 'Could not load payments',
       };
     }
-  }
-
-  @Cron('20 * * * * *', {
-    name: 'myJob',
-  })
-  async checkForPayments() {
-    console.log('Checking for payments...');
-    const job = this.scheduleRegistry.getCronJob('myJob');
-    console.log(job);
-  }
-
-  @Interval('myInterval', 2000)
-  async checkForPayments2() {
-    console.log('Checking for payments22...');
-    const interval = this.scheduleRegistry.getInterval('myInterval');
-    clearInterval(interval);
   }
 }
