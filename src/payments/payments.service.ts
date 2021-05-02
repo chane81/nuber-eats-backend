@@ -3,7 +3,7 @@ import { Cron, Interval, SchedulerRegistry, Timeout } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import {
   CreatePaymentInput,
   CreatePaymentOutput,
@@ -90,5 +90,27 @@ export class PaymentService {
         error: 'Could not load payments',
       };
     }
+  }
+
+  // Interval 은 체크용
+  // @Interval(2000)
+
+  // 매일 11시 50분에 프로모트 기간 체크 및 UPDATE CRON
+  @Cron('0 50 11 * * *')
+  async checkPromotedRestaurants() {
+    // 프로모트 기간이 현재날짜 보다 작다면 더이상 프로모트하면 안된다.
+    const restaurants = await this.restaurants.find({
+      isPromoted: true,
+      promotedUntil: LessThan(new Date()),
+    });
+
+    console.log(restaurants);
+
+    // 프로모트 기간이 지난 reataurant는 프로모트여부(isPromote) 여부 false, 프로모트기간 null 로 세팅
+    restaurants.forEach(async (restaurant) => {
+      restaurant.isPromoted = false;
+      restaurant.promotedUntil = null;
+      await this.restaurants.save(restaurant);
+    });
   }
 }
