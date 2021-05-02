@@ -20,7 +20,7 @@ import {
 import { AllCategoriesOutPut } from './dtos/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dtos/category.dto';
 import { RestaurantsInput, RestaurantsOutput } from './dtos/restaurants.dto';
-import { RestaurantInput, RestaurantOutput } from './dtos/restaurant';
+import { RestaurantInput, RestaurantOutput } from './dtos/restaurant.dto';
 import {
   SearchRestaurantInput,
   SearchRestaurantOutput,
@@ -200,6 +200,9 @@ export class RestaurantService {
         where: {
           category,
         },
+        order: {
+          isPromoted: 'DESC',
+        },
         take: 25,
         skip: (page - 1) * 25,
       });
@@ -225,11 +228,14 @@ export class RestaurantService {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
         skip: (page - 1) * 25,
         take: 25,
+        order: {
+          isPromoted: 'DESC',
+        },
       });
 
       return {
         ok: true,
-        restaurants,
+        results: restaurants,
         totalPages: Math.ceil(totalResults / 25),
         totalResults,
       };
