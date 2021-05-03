@@ -8,6 +8,6 @@ async function bootstrap() {
   // class-validator 사용을 위한 설정
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();
