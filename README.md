@@ -1,5 +1,14 @@
 # Nuber Eats Backend project
 
+## 스택
+
+- Typescript
+- NestJS
+- Graphql
+- Postgres DB
+- Typeorm
+- Jest Test
+
 ## nestjs 셋업 및 프로젝트 create
 
 - nestjs 전역 인스톨
