@@ -55,10 +55,8 @@
   "workbench.colorTheme": "Cobalt2",
 
   // 터미널 설정
-  "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "underline",
-  "terminal.integrated.shellArgs.windows": ["/K", "chcp 65001"],
   "terminal.integrated.fontFamily": "Lucida console, Consolas, 'Courier New', monospace, 'Segoe UI emoji', 'Segoe UI Symbol'",
   "terminal.integrated.fontSize": 14,
 
