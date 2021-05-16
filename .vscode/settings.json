@@ -22,19 +22,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  // "editor.fontFamily": "'SeoulNamsanM'",
-
-  // perttier 설정
-  "prettier.jsxSingleQuote": true,
-  "prettier.tabWidth": 2,
-  "prettier.useTabs": true,
-  "prettier.printWidth": 83,
-  "prettier.singleQuote": true,
-  "prettier.bracketSpacing": true,
-  "prettier.trailingComma": "none",
-  "prettier.semi": true,
-  "prettier.arrowParens": "avoid",
-
   // folder exclude
   "search.exclude": {
     ".git": true,
@@ -49,16 +36,6 @@
   // files 설정
   "files.autoSave": "onFocusChange",
   "files.defaultLanguage": "ko",
-
-  // 테마 설정
-  "workbench.iconTheme": "material-icon-theme",
-  "workbench.colorTheme": "Cobalt2",
-
-  // 터미널 설정
-  "terminal.integrated.cursorBlinking": true,
-  "terminal.integrated.cursorStyle": "underline",
-  "terminal.integrated.fontFamily": "Lucida console, Consolas, 'Courier New', monospace, 'Segoe UI emoji', 'Segoe UI Symbol'",
-  "terminal.integrated.fontSize": 14,
 
   // importCost 설정
   "importCost.debug": true,
