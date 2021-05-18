@@ -30,7 +30,7 @@ export class MailService {
       });
 
       let html =
-        '<div>Hi! {{username}}</div><div>Your Code: {{code}}</div><div style="margin-top: 20px;"><a href="http://localhost:3000/confirm?{{code}}" style="height:12px;border:1px solid #5c7cfa;background-color:#5c7cfa;color:white; padding: 8px;text-decoration: none;">Verify Your E-Mail</a></div>';
+        '<div>Hi! {{username}}</div><div>Your Code: {{code}}</div><div style="margin-top: 20px;"><a href="http://localhost:3000/confirm?code={{code}}" style="height:12px;border:1px solid #5c7cfa;background-color:#5c7cfa;color:white; padding: 8px;text-decoration: none;">Verify Your E-Mail</a></div>';
       emailVars.forEach(({ key, value }) => {
         const matcher = new RegExp('{{' + key + '}}', 'g');
         html = html.replace(matcher, value);
