@@ -18,12 +18,20 @@
   "editor.minimap.enabled": false,
   "editor.fontSize": 15,
   "window.zoomLevel": 0.3,
-  "[javascript]": {
-    "editor.formatOnSave": false
+
+  // eslint 설정
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javscript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+
   // folder exclude
   "search.exclude": {
     ".git": true,

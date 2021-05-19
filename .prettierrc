@@ -1,9 +1,21 @@
 {
   "singleQuote": true,
-  "trailingComma": "all",
-  "tabWidth": 2,
+  "parser": "typescript",
+  "semi": true,
   "useTabs": false,
-  "printWidth": 83,
-  "bracketSpacing": true,
-  "semi": true
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "printWidth": 120,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": ["*.json", ".*rc"],
+      "options": {
+        "parser": "json5",
+        "quoteProps": "preserve",
+        "singleQuote": false,
+        "trailingComma": "none"
+      }
+    }
+  ]
 }
