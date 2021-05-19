@@ -5,6 +5,5 @@
   "useTabs": false,
   "printWidth": 83,
   "bracketSpacing": true,
-  "semi": true,
-  "arrowParens": "avoid"
+  "semi": true
 }
