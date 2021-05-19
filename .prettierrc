@@ -5,8 +5,9 @@
   "useTabs": false,
   "tabWidth": 2,
   "trailingComma": "all",
-  "printWidth": 120,
+  "printWidth": 83,
   "arrowParens": "always",
+  "bracketSpacing": true,
   "overrides": [
     {
       "files": ["*.json", ".*rc"],
