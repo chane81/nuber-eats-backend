@@ -70,10 +70,7 @@ export class RestaurantResolver {
     @AuthUser() owner: User,
     @Args('input') deleteRestaurantInput: DeleteRestaurantInput,
   ): Promise<DeleteRestaurantOutput> {
-    return this.restaurantService.deleteRestaurant(
-      owner,
-      deleteRestaurantInput,
-    );
+    return this.restaurantService.deleteRestaurant(owner, deleteRestaurantInput);
   }
 
   @Query(() => RestaurantsOutput)
@@ -115,9 +112,7 @@ export class CategoryReolver {
   }
 
   @Query(() => CategoryOutput)
-  category(
-    @Args('input') categoryInput: CategoryInput,
-  ): Promise<CategoryOutput> {
+  category(@Args('input') categoryInput: CategoryInput): Promise<CategoryOutput> {
     return this.restaurantService.findCategoryBySlug(categoryInput);
   }
 }
