@@ -44,6 +44,71 @@
 - 모듈 생성
   - nest g mo restaurants
 
+## env 변수 configuration
+
+- 참고 url: <https://docs.nestjs.com/techniques/configuration>
+- 기본방식
+  - app.module.ts 에서 ConfigModule.forRoot로 isGlobal 설정이 되어있을 경우 service 단 resolve 단에서 사용시 아래와 같이 쓸 수 있다.
+
+  ```javascript
+  const dbHost = this.configService.get<string>('database.host');
+  ```
+
+  - 하지만 위와 같이 썼을 경우 env 명을 알기위해 .env 파일을 다시 열어 환경변수명을 확인하여 타이핑을 쳐야하는 번거로움이 있다.
+
+- 좀 더 나은 방식
+  1. nestjs 에는 registerAs 함수를 제공하여 env를 타입 기반으로 등록/호출할 수 있게 도와준다. 아래와 같이 registerAs 로 등록을 먼저 한다.
+
+      ```javascript
+      import { registerAs } from '@nestjs/config';
+
+      export default registerAs('env', () => ({
+        DB_HOST: process.env.DB_HOST,
+        DB_PORT: process.env.DB_PORT,
+        DB_USERNAME: process.env.DB_USERNAME,
+        DB_PASSWORD: process.env.DB_PASSWORD,
+        DB_NAME: process.env.DB_NAME,
+        PRIATE_KEY: process.env.PRIATE_KEY,
+        NODEMAILER_USER: process.env.NODEMAILER_USER,
+        NODEMAILER_PASSWORD: process.env.NODEMAILER_PASSWORD,
+        NODEMAILER_FROM_EMAIL: process.env.NODEMAILER_FROM_EMAIL,
+      }));
+      ```
+
+  2. app.module.ts 에서 load 단에 등록해준다.
+
+      ```javascript
+      @Module({
+        imports: [
+          // process env set
+          ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: `.env.${process.env.NODE_ENV}`,
+            load: [envConfig],
+          })
+        ]
+      })
+      ```
+
+  3. env 사용시 아래와 같이 사용한다. 먼저 inject 를 한 후 사용
+
+      ```javascript
+      import { ConfigType } from '@nestjs/config';
+
+      @Injectable()
+      export class RestaurantService {
+        constructor(
+        ) {
+          @Inject(envConfig.KEY)
+          private env: ConfigType<typeof envConfig>,
+        }
+
+        async envTest(): string {
+          return this.env.NODEMAILER_USER;
+        }    
+      }
+      ```
+
 ## graphql
 
 - graphql resolve args 의 validate 체크
@@ -412,7 +477,6 @@
     > `orderUpdate`
   - trigger
     > `editOrder`
-
 
 ## Schedule (@nestjs/schedule)
 
