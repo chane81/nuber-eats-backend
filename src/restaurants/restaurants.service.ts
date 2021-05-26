@@ -207,11 +207,11 @@ export class RestaurantService {
         skip: (page - 1) * 25,
       });
 
-      category.restaurants = restaurants;
       const totalResults = await this.countRestaurants(category);
 
       return {
         ok: true,
+        restaurants,
         category,
         totalPages: Math.ceil(totalResults / 25),
       };
