@@ -1,8 +1,11 @@
 import { Test } from '@nestjs/testing';
+import { mocked } from 'ts-jest/utils';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
 import { MailService } from './mail.service';
 import { EmailVar } from './mail.interfaces';
 import * as nodemailer from 'nodemailer';
+import Mail from 'nodemailer/lib/mailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 const TEST_SMTP_USER = 'testuser@gmail.com';
 const TEST_SMTP_PWD = '1111';
@@ -13,6 +16,9 @@ jest.mock('nodemailer', () => ({
     sendMail: jest.fn(() => true),
   })),
 }));
+
+// const mockedNodeMailer = mocked(nodemailer.createTransport, true).mock
+//   .results[0] as jest.MockResultReturn<Mail>;
 
 describe('MailService', () => {
   let service: MailService;
@@ -105,16 +111,24 @@ describe('MailService', () => {
       const ok = await service.sendEmail(subject, emailVars);
 
       // expect nodemailer sendMail
-      let html = '<div>Hi! {{username}}</div><div>Your Code: {{code}}</div>';
+      let html =
+        '<div>Hi! {{username}}</div><div>Your Code: test-code</div><div style="margin-top: 20px;"><a href="http://localhost:3000/confirm?code={{code}}" style="height:12px;border:1px solid #5c7cfa;background-color:#5c7cfa;color:white; padding: 8px;text-decoration: none;">Verify Your E-Mail</a></div>';
       emailVars.forEach(({ key, value }) => {
         const matcher = new RegExp('{{' + key + '}}', 'g');
         html = html.replace(matcher, value);
       });
 
-      const mockSendMail = (nodemailer.createTransport as jest.Mock).mock
-        .results[0].value.sendMail;
-      expect(mockSendMail).toHaveBeenCalledTimes(1);
-      expect(mockSendMail).toHaveBeenCalledWith({
+      // 아래처럼 하면 value 부분이 any 타입이다
+      // const mockSendMail = (nodemailer.createTransport as jest.Mock).mock
+      //   .results[0].value.sendMail;
+
+      // 좀 더 type 기반으로 쓰고 싶다면 아래와 같이 쓰면 된다.
+      const mockedNodeMailer = mocked(nodemailer.createTransport, true).mock
+        .results[0] as jest.MockResultReturn<Mail>;
+      const { sendMail } = mockedNodeMailer.value;
+
+      expect(sendMail).toHaveBeenCalledTimes(1);
+      expect(sendMail).toHaveBeenCalledWith({
         // 보내는 곳 메일 주소
         from: TEST_FROM_EMAIL,
         // 받는 곳의 메일 주소
