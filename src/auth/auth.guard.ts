@@ -13,10 +13,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    const roles = this.reflector.get<AllowedRoles>(
-      'roles',
-      context.getHandler(),
-    );
+    const roles = this.reflector.get<AllowedRoles>('roles', context.getHandler());
 
     // 만약 roles 가 없다면 public 권한
     if (!roles) {

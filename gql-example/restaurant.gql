@@ -18,6 +18,33 @@ mutation {
 }
 
 query {
+  myRestaurants {
+    error
+    ok
+    restaurants {
+      id
+      name
+    }
+  }
+}
+
+query {
+  myRestaurant(input: {
+    id: 8
+  }) {
+    error
+    ok
+   	restaurant {
+      name
+      category {
+        id
+        name
+      }
+    }
+  }
+}
+
+query {
   category(input: {
     page: 1,
     slug: "korean-bbq"
