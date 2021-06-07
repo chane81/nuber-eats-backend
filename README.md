@@ -98,10 +98,9 @@
       @Injectable()
       export class RestaurantService {
         constructor(
-        ) {
           @Inject(envConfig.KEY)
           private env: ConfigType<typeof envConfig>,
-        }
+        ) {}
 
         async envTest(): string {
           return this.env.NODEMAILER_USER;
