@@ -486,3 +486,25 @@
   - intervals
 - 참고링크
   <https://docs.nestjs.com/techniques/task-scheduling>
+
+## File Upload
+
+- 참고
+  <https://docs.nestjs.com/techniques/file-upload>
+
+  - 코드 - uploads.module.ts
+
+    ```javascript
+    import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+    import { FileInterceptor } from '@nestjs/platform-express';
+
+    @Controller('uploads')
+    export class UploadController {
+      @Post('')
+      @UseInterceptors(FileInterceptor('file'))
+      uploadFile(@UploadedFile() file) {
+        console.log('file', file);
+      }
+    }
+
+    ```
