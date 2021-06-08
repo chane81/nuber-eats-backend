@@ -8,6 +8,9 @@ async function bootstrap() {
   // class-validator 사용을 위한 설정
   app.useGlobalPipes(new ValidationPipe());
 
+  // cors
+  app.enableCors();
+
   await app.listen(4000);
 }
 bootstrap();
