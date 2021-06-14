@@ -12,4 +12,5 @@ export default registerAs('env', () => ({
   NODEMAILER_FROM_EMAIL: process.env.NODEMAILER_FROM_EMAIL || '',
   AWS_S3_ACCKEY: process.env.AWS_S3_ACCKEY || '',
   AWS_S3_SECRET: process.env.AWS_S3_SECRET || '',
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME || '',
 }));
