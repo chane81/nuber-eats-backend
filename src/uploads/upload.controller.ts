@@ -11,8 +11,6 @@ import * as AWS from 'aws-sdk';
 import { ConfigType } from '@nestjs/config';
 import envConfig from '../config/env.config';
 
-const BUCKET_NAME = 'nubereats20210607';
-
 @Injectable()
 @Controller('uploads')
 export class UploadController {
@@ -24,6 +22,8 @@ export class UploadController {
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file) {
+    const bucketName = this.env.AWS_S3_BUCKET_NAME;
+
     AWS.config.update({
       credentials: {
         accessKeyId: this.env.AWS_S3_ACCKEY,
@@ -36,13 +36,13 @@ export class UploadController {
       await new AWS.S3()
         .putObject({
           Body: file.buffer,
-          Bucket: BUCKET_NAME,
+          Bucket: bucketName,
           Key: objectName,
           ACL: 'public-read',
         })
         .promise();
 
-      const url = `https://${BUCKET_NAME}.s3.amazonaws.com/${objectName}`;
+      const url = `https://${bucketName}.s3.amazonaws.com/${objectName}`;
 
       return { url };
     } catch (e) {
