@@ -77,7 +77,7 @@ export class OrderService {
             if (dishOption.extra) {
               dishFinalPrice += dishOption.extra;
             } else {
-              const dishOptionChoice = dishOption.choices.find(
+              const dishOptionChoice = dishOption.choices?.find(
                 (optionChoice) => optionChoice.name == itemOption.choice,
               );
 
@@ -118,9 +118,10 @@ export class OrderService {
       return {
         ok: true,
       };
-    } catch {
+    } catch (e) {
+      console.log('ee', e);
       return {
-        ok: true,
+        ok: false,
         error: 'Could not create order.',
       };
     }
@@ -266,10 +267,7 @@ export class OrderService {
 
       // delivery 는 pickedup, delivered 상태에 대해서 수정 o
       if (user.role === UserRole.Delivery) {
-        if (
-          status !== OrderStatus.PickedUp &&
-          status !== OrderStatus.Delivered
-        ) {
+        if (status !== OrderStatus.PickedUp && status !== OrderStatus.Delivered) {
           canEdit = false;
         }
       }
