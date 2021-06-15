@@ -44,8 +44,7 @@ export class Dish extends CoreEntity {
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  @IsNumber()
-  photo?: number;
+  photo?: string;
 
   @Field(() => String)
   @Column()
