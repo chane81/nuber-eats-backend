@@ -36,10 +36,16 @@ query {
     error
     ok
    	restaurant {
+      id
       name
       category {
         id
         name
+      }
+      orders {
+        id
+        createAt
+        total
       }
     }
   }
