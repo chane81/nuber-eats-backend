@@ -117,6 +117,7 @@ export class OrderService {
 
       return {
         ok: true,
+        orderId: order.id,
       };
     } catch (e) {
       console.log('ee', e);
