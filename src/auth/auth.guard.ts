@@ -29,25 +29,21 @@ export class AuthGuard implements CanActivate {
       if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {
         const { user } = await this.userService.findById(decoded['id']);
 
-        if (!user) {
-          return false;
+        if (user) {
+          gqlContext['user'] = user;
+
+          // Any role 의 경우는 user 가 있는지 여부만 체크
+          if (roles.includes('Any')) {
+            return true;
+          }
+
+          // 만약 user 가 있다면 role 를 체크
+          return roles.includes(user.role);
         }
-
-        gqlContext['user'] = user;
-
-        // Any role 의 경우는 user 가 있는지 여부만 체크
-        if (roles.includes('Any')) {
-          return true;
-        }
-
-        // 만약 user 가 있다면 role 를 체크
-        return roles.includes(user.role);
-      } else {
-        return false;
       }
-    } else {
-      return false;
     }
+
+    return false;
 
     // const user: User = gqlContext['user'];
 
