@@ -52,7 +52,7 @@ import envConfig from './config/env.config';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
-      logging: process.env.NODE_ENV === 'dev',
+      logging: false, //process.env.NODE_ENV === 'dev',
       // Heroku Postgres DB 연결시
       // ssl: {
       //   rejectUnauthorized: true,
@@ -82,6 +82,15 @@ import envConfig from './config/env.config';
         };
       },
       // subscription 설정
+      subscriptions: {
+        onConnect: (connectionParams, websocket) => {
+          if (connectionParams['x-jwt']) {
+            return connectionParams;
+          } else {
+            websocket.close();
+          }
+        },
+      },
       installSubscriptionHandlers: true,
     }),
     JwtModule.forRoot({
