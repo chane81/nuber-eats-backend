@@ -88,7 +88,7 @@ export class OrderResolver {
       if (
         order.driverId !== user.id &&
         order.customerId !== user.id &&
-        order.restaurant.ownerId === user.id
+        order.restaurant.ownerId !== user.id
       ) {
         return false;
       }
