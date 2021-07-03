@@ -57,5 +57,11 @@
   "importCost.typescriptExtensions": ["\\.tsx?$"],
   "importCost.javascriptExtensions": ["\\.jsx?$"],
   "importCost.bundleSizeDecoration": "both",
-  "importCost.showCalculatingDecoration": true
+  "importCost.showCalculatingDecoration": true,
+
+  // 터미널 설정
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "underline",
+  "terminal.integrated.fontFamily": "MesloLGS NF"
 }
