@@ -9,6 +9,10 @@
 - Typeorm
 - Jest Test
 
+## url
+
+<https://nuber-eats-backend-k.herokuapp.com/graphql>
+
 ## nestjs 셋업 및 프로젝트 create
 
 - nestjs 전역 인스톨
