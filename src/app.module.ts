@@ -31,6 +31,7 @@ import envConfig from './config/env.config';
       envFilePath: `.env.${process.env.NODE_ENV}`,
       load: [envConfig],
       validationSchema: Joi.object({
+        PORT: Joi.number().required(),
         NODE_ENV: Joi.string().valid('dev', 'prod', 'test'),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
