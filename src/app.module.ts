@@ -35,11 +35,17 @@ const isDev = process.env.NODE_ENV === 'development';
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         NODE_ENV: Joi.string().valid('development', 'production', 'test'),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.string().required(),
-        DB_USERNAME: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_NAME: Joi.string().required(),
+        ...(isDev
+          ? {
+              DB_HOST: Joi.string().required(),
+              DB_PORT: Joi.string().required(),
+              DB_USERNAME: Joi.string().required(),
+              DB_PASSWORD: Joi.string().required(),
+              DB_NAME: Joi.string().required(),
+            }
+          : {
+              DATABASE_URL: Joi.string().required(),
+            }),
         PRIATE_KEY: Joi.string().required(),
         NODEMAILER_USER: Joi.string().required(),
         NODEMAILER_PASSWORD: Joi.string().required(),
