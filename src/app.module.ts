@@ -70,7 +70,7 @@ const isDev = process.env.NODE_ENV === 'development';
       logging: isDev,
       // Heroku Postgres DB 연결시
       ssl: {
-        rejectUnauthorized: !isDev,
+        rejectUnauthorized: false,
       },
       entities: [
         User,
