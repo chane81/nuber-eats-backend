@@ -66,7 +66,7 @@ const isDev = process.env.NODE_ENV === 'development';
         : {
             url: process.env.DATABASE_URL,
           }),
-      synchronize: true,
+      synchronize: isDev,
       logging: isDev,
       // Heroku Postgres DB 연결시
       ...(!isDev && {
