@@ -87,7 +87,7 @@ const isDev = process.env.NODE_ENV === 'development';
     }),
     // graphql set
     GraphQLModule.forRoot({
-      playground: true,
+      playground: isDev,
       /** graphql schema 파일을 생성시에 아래 옵션 사용 */
       // autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql')
       autoSchemaFile: true,
