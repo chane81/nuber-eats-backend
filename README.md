@@ -507,3 +507,21 @@
     }
 
     ```
+
+## Deploy
+
+- heroku
+  - setup
+
+    ```shell
+    ## 설치
+    choco install heroku-cli
+
+    ## heroku repo set
+    heroku git:remote -a nuber-eats-backend-k
+
+    ## heroku repo push
+    git add .
+    git commit -am "make it better"
+    git push heroku master
+    ```
