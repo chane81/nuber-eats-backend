@@ -23,6 +23,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { UploadsModule } from './uploads/uploads.module';
 import envConfig from './config/env.config';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 @Module({
   imports: [
     // process env set
@@ -32,7 +34,7 @@ import envConfig from './config/env.config';
       load: [envConfig],
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
-        NODE_ENV: Joi.string().valid('dev', 'prod', 'test'),
+        NODE_ENV: Joi.string().valid('development', 'production', 'test'),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
@@ -47,13 +49,19 @@ import envConfig from './config/env.config';
     // type orm set
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      synchronize: process.env.NODE_ENV !== 'prod',
-      logging: false, //process.env.NODE_ENV === 'dev',
+      ...(isDev
+        ? {
+            host: process.env.DB_HOST,
+            port: +process.env.DB_PORT,
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+          }
+        : {
+            url: process.env.DATABASE_URL,
+          }),
+      synchronize: isDev,
+      logging: isDev,
       // Heroku Postgres DB 연결시
       // ssl: {
       //   rejectUnauthorized: true,
