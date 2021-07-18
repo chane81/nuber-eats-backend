@@ -9,6 +9,35 @@
 - Typeorm
 - Jest Test
 
+## .env 변수명
+
+- 아래 env 설정이 필요함
+
+```text
+# PORT
+PORT=3000
+
+# DB
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+
+# JWT
+PRIATE_KEY=
+
+# NODEMAILER
+NODEMAILER_USER=
+NODEMAILER_PASSWORD=
+NODEMAILER_FROM_EMAIL=
+
+# AWS
+AWS_S3_ACCKEY=
+AWS_S3_SECRET=
+AWS_S3_BUCKET_NAME=
+```
+
 ## url
 
 <https://nuber-eats-backend-k.herokuapp.com/graphql>

@@ -53,6 +53,7 @@ const isDev = process.env.NODE_ENV === 'development';
       }),
     }),
     // type orm set
+    // heroku 연결시 호스트및 기타 정보가 고정이 아니므로 heroku.DATABASE_URL 로 설정하는것이 바람직하다.
     TypeOrmModule.forRoot({
       type: 'postgres',
       ...(isDev
