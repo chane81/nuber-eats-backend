@@ -324,7 +324,7 @@ AWS_S3_BUCKET_NAME=
 ## DTO & Entity
 
 - DTO
-  - DTO 생성시 nest.js 에서는 mapped-type 라는것을 제공한다
+  - DTO 생성시 nest.js 에서는 mapped-type 라는것을 제공한다.
   - 관련 URL
     - <https://docs.nestjs.com/openapi/mapped-types>
   - mapped-type 종류
